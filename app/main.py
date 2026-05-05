@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import heapq
+import random
 from dataclasses import dataclass
 from typing import Callable
 
-import random
 import matplotlib.pyplot as plt
 
 Graph = dict[str, list[tuple[str, int]]]
@@ -72,8 +72,8 @@ PLAYERS = {
 
 def random_outfield_point(max_x=250, max_y=250):
     while True:
-        x = random.uniform(0, max_x)
-        y = random.uniform(0, max_y)
+        x = random.uniform(0, max_x) # noqa: S311
+        y = random.uniform(0, max_y) # noqa: S311
 
         if not (0 <= x <= 90 and 0 <= y <= 90):
             return (int(x), int(y))
