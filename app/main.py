@@ -69,7 +69,7 @@ PLAYERS = {
     "RF": (175, 50),
 }
 
-BALL = (120, 160)
+BALL = (120, 60)
 
 def to_node(x, y):
     return f"{x}_{y}"
@@ -153,8 +153,23 @@ def astar_graph(
 
 graph = generate_field_graph(200, 200)
 
-start = to_node(*PLAYERS["CF"])
-goal = to_node(*BALL)
+results = {}
+
+for name, pos in PLAYERS.items():
+    start = to_node(*pos)
+    goal = to_node(*BALL)
+
+    result = astar_graph(
+        graph,
+        start,
+        goal,
+        heuristic=lambda node: manhattan(node, goal)
+    )
+
+    results[name] = result.cost
+
+best = min(results, key=results.get)
+print("Fastest player:", best)
 
 astar_result = astar_graph(
     graph,
