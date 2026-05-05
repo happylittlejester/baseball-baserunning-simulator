@@ -9,27 +9,31 @@
 
 ## About Project
 
-This project simulates baserunning in baseball by estimating how far the runner can advance based on the ball’s landing spot and the outfielders’ reaction time. 
+This project simulates baserunning in baseball by estimating how far the runner can advance based on the ball’s landing spot and the outfielders’ reaction time.
 Using A* algorithm to find the shortest route for defenders, the model predicts how far the runner can advance before the outfielders reach the ball.
 
 ## Setup
 
 1. Clone repository
+
 ```shell
 https://github.com/happylittlejester/baseball-baserunning-simulator.git
 ```
 
 2. Install UV
+
 ```shell
 pip install uv
 ```
 
 3. Enter project directory
+
 ```shell
 cd baseball-baserunning-simulator
 ```
 
 4. Create Python Virtual Environment
+
 ```shell
 uv sync
 ```
