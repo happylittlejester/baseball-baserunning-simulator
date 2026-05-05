@@ -8,9 +8,11 @@
 [![License: GPLv3](https://img.shields.io/badge/License-MIT-blue.svg)](https://license.md/licenses/mit-license/)
 
 ## About Project
+
 This project simulates baserunning in baseball by estimating how far the runner can advance based on the ball’s landing spot and the outfielders’ reaction time. Using A* algorithm to find the shortest route for defenders, the model predicts how far the runner can advance before the outfielders reach the ball.
 
 ## Setup
+
 1. Clone repository
 ```shell
 https://github.com/happylittlejester/baseball-baserunning-simulator.git
