@@ -17,28 +17,28 @@ Using A* algorithm to find the shortest route for defenders, the model predicts 
 1. Clone repository
 
 ```shell
-https://github.com/happylittlejester/baseball-baserunning-simulator.git
+git clone https://github.com/happylittlejester/baseball-baserunning-simulator.git
 ```
 
-2. Install UV
+1. Install UV
 
 ```shell
 pip install uv
 ```
 
-3. Enter project directory
+1. Enter project directory
 
 ```shell
 cd baseball-baserunning-simulator
 ```
 
-4. Create Python Virtual Environment
+1. Create Python Virtual Environment
 
 ```shell
 uv sync
 ```
 
-5. Open project in Visual Studio Code
+1. Open project in Visual Studio Code
 
 ## Run
 
