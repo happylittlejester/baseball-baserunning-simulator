@@ -4,6 +4,7 @@ import heapq
 from dataclasses import dataclass
 from typing import Callable
 
+import random
 import matplotlib.pyplot as plt
 
 Graph = dict[str, list[tuple[str, int]]]
@@ -69,7 +70,16 @@ PLAYERS = {
     "RF": (175, 50),
 }
 
-BALL = (120, 60)
+def random_outfield_point(max_x=250, max_y=250):
+    while True:
+        x = random.uniform(0, max_x)
+        y = random.uniform(0, max_y)
+
+        if not (0 <= x <= 90 and 0 <= y <= 90):
+            return (int(x), int(y))
+
+BALL = random_outfield_point()
+print("Ball landed at:", BALL)
 
 def to_node(x, y):
     return f"{x}_{y}"
@@ -165,8 +175,11 @@ for name, pos in PLAYERS.items():
 
     results[name] = result.cost
 
-best = min(results, key=results.get)
-print("Fastest player:", best)
+best_player = min(results, key=results.get)
+print("Fastest player:", best_player)
+
+start = to_node(*PLAYERS[best_player])
+goal = to_node(*BALL)
 
 astar_result = astar_graph(
     graph,
