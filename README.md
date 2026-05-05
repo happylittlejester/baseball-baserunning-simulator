@@ -43,6 +43,7 @@ uv sync
 ## Run
 
 Run project
+
 ```shell
 uv run python app/main.py
 ```
