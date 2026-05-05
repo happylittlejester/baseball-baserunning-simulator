@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from collections import deque
-from dataclasses import dataclass
 import heapq
-import matplotlib.pyplot as plt
+from dataclasses import dataclass
 from typing import Callable
+
+import matplotlib.pyplot as plt
 
 Graph = dict[str, list[tuple[str, int]]]
 
@@ -145,9 +145,6 @@ def astar_graph(
                 f = tentative_g + heuristic(neighbor)
                 heapq.heappush(queue, (f, neighbor))
 
-        if draw_graphs:
-            None
-
     return SearchResult(path=[], visited_count=0, cost=None)
 
 
@@ -163,7 +160,7 @@ for name, pos in PLAYERS.items():
         graph,
         start,
         goal,
-        heuristic=lambda node: manhattan(node, goal)
+        heuristic=lambda node, g=goal: manhattan(node, g)
     )
 
     results[name] = result.cost
