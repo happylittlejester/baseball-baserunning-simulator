@@ -70,13 +70,13 @@ PLAYERS = {
     "RF": (175, 50),
 }
 
-def random_outfield_point(max_x=250, max_y=250):
+def random_outfield_point(max_x = 250, max_y = 250):
     while True:
-        x = random.uniform(0, max_x) # noqa: S311
-        y = random.uniform(0, max_y) # noqa: S311
+        x = random.randint(0, max_x) # noqa: S311
+        y = random.randint(0, max_y) # noqa: S311
 
         if not (0 <= x <= 90 and 0 <= y <= 90):
-            return (int(x), int(y))
+            return (x, y)
 
 BALL = random_outfield_point()
 print("Ball landed at:", BALL)
@@ -85,7 +85,7 @@ def to_node(x, y):
     return f"{x}_{y}"
 
 def draw_field_path(path: list[str]):
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize = (8, 8))
 
     # bases
     for name, (x, y) in BASES.items():
@@ -111,6 +111,35 @@ def draw_field_path(path: list[str]):
         ys.append(y)
 
     ax.plot(xs, ys, color="yellow", linewidth=2)
+
+    ax.set_xlim(-10, 200)
+    ax.set_ylim(-10, 200)
+    ax.set_aspect("equal")
+    plt.show()
+
+def draw_home_run():
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # bases (all visited on HR)
+    for name, (x, y) in BASES.items():
+        ax.scatter(x, y, s=200, color="green", edgecolor="black")
+        ax.text(x, y, name, ha="center", va="center")
+
+    # outfielders
+    for name, (x, y) in PLAYERS.items():
+        ax.scatter(x, y, s=200, color="blue")
+        ax.text(x, y, name, ha="center", va="center", color="white")
+
+    # HOME RUN text in the center
+    ax.text(
+        100, 100,
+        "HOME RUN",
+        ha="center",
+        va="center",
+        fontsize=30,
+        color="yellow",
+        weight="bold"
+    )
 
     ax.set_xlim(-10, 200)
     ax.set_ylim(-10, 200)
@@ -157,36 +186,49 @@ def astar_graph(
 
     return SearchResult(path=[], visited_count=0, cost=None)
 
+width = 200
+height = 200
+graph = generate_field_graph(width, height)
 
-graph = generate_field_graph(200, 200)
+def ball_in_bounds(ball, width, height):
+    x, y = ball
+    return 0 <= x < width and 0 <= y < height
 
-results = {}
+if not ball_in_bounds(BALL, width, height):
+    print("HOME RUN")
+    draw_home_run()
+else:
+    results = {}
 
-for name, pos in PLAYERS.items():
-    start = to_node(*pos)
-    goal = to_node(*BALL)
+    for name, pos in PLAYERS.items():
+        start = to_node(*pos)
+        goal = to_node(*BALL)
 
-    result = astar_graph(
-        graph,
-        start,
-        goal,
-        heuristic=lambda node, g=goal: manhattan(node, g)
-    )
+        result = astar_graph(
+            graph,
+            start,
+            goal,
+            heuristic=lambda node, g=goal: manhattan(node, g)
+        )
 
-    results[name] = result.cost
+        if result.cost is not None:
+            results[name] = result.cost
 
-best_player = min(results, key=results.get)
-print("Fastest player:", best_player)
+    if not results:
+            print("No reachable players — ball too far.")
+    else:
+        best_player = min(results, key=results.get)
+        print("Fastest player:", best_player)
 
-start = to_node(*PLAYERS[best_player])
-goal = to_node(*BALL)
+        start = to_node(*PLAYERS[best_player])
+        goal = to_node(*BALL)
 
-astar_result = astar_graph(
-    graph,
-    start,
-    goal,
-    heuristic=lambda node: manhattan(node, goal)
-)
+        astar_result = astar_graph(
+            graph,
+            start,
+            goal,
+            heuristic=lambda node: manhattan(node, goal)
+        )
 
-print(astar_result)
-draw_field_path(astar_result.path)
+        print(astar_result)
+        draw_field_path(astar_result.path)
