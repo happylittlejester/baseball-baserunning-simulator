@@ -70,7 +70,7 @@ PLAYERS = {
     "RF": (175, 50),
 }
 
-def random_outfield_point(max_x = 250, max_y = 250):
+def random_outfield_point(max_x = 220, max_y = 220):
     while True:
         x = random.randint(0, max_x) # noqa: S311
         y = random.randint(0, max_y) # noqa: S311
@@ -117,6 +117,7 @@ def draw_field_path(path: list[str]):
     ax.set_aspect("equal")
     plt.show()
 
+
 def draw_home_run():
     fig, ax = plt.subplots(figsize=(8, 8))
 
@@ -138,6 +139,36 @@ def draw_home_run():
         va="center",
         fontsize=30,
         color="yellow",
+        weight="bold"
+    )
+
+    ax.set_xlim(-10, 200)
+    ax.set_ylim(-10, 200)
+    ax.set_aspect("equal")
+    plt.show()
+
+
+def draw_out(player_name):
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # bases
+    for name, (x, y) in BASES.items():
+        ax.scatter(x, y, s=200, color="white", edgecolor="black")
+        ax.text(x, y, name, ha="center", va="center")
+
+    # outfielders
+    for name, (x, y) in PLAYERS.items():
+        color = "red" if name == player_name else "blue"
+        ax.scatter(x, y, s=200, color=color)
+        ax.text(x, y, name, ha="center", va="center", color="white")
+
+    ax.text(
+        100, 100,
+        "OUT",
+        ha="center",
+        va="center",
+        fontsize=30,
+        color="red",
         weight="bold"
     )
 
@@ -194,6 +225,14 @@ def ball_in_bounds(ball, width, height):
     x, y = ball
     return 0 <= x < width and 0 <= y < height
 
+# OUT if ball lands on outfielder
+for name, (px, py) in PLAYERS.items():
+    if BALL == (px, py):
+        print("OUT! Ball caught by", name)
+        draw_out(name)
+        exit()
+
+# HOME RUN if ball outside field       
 if not ball_in_bounds(BALL, width, height):
     print("HOME RUN")
     draw_home_run()
