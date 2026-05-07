@@ -227,7 +227,7 @@ def ball_in_bounds(ball, width, height):
 
 # OUT if ball lands on outfielder
 for name, (px, py) in PLAYERS.items():
-    if BALL == (px, py):
+    if (px, py) == BALL:
         print("OUT! Ball caught by", name)
         draw_out(name)
         exit()
