@@ -1,10 +1,12 @@
-from drawing import draw_play
-from field import BALL, PLAYERS, ball_in_bounds, generate_field_graph, to_node
-from pathfinding import astar_graph, manhattan
-from physics import fielder_time_to_ball, generate_base_times
+import math
 
-width = 200
-height = 200
+from drawing import draw_play
+from field import BALL, BASES, PLAYERS, ball_in_bounds, generate_field_graph, to_node
+from pathfinding import astar_graph, manhattan
+from physics import fielder_total_time, generate_base_times
+
+width = 350
+height = 350
 graph = generate_field_graph(width, height)
 
 # HOME RUN if ball outside field
@@ -47,24 +49,51 @@ if not results:
     draw_play("NO PLAY — BALL UNREACHABLE")
     exit()
 
+
+# Throw distance from closest outfielder
+throw_distances = {
+    base: math.dist(BALL, pos)
+    for base, pos in BASES.items()
+}
+
+
 # Time
 base_times = generate_base_times()
-fielder_time = fielder_time_to_ball(astar_result.cost)
 
-if fielder_time < base_times["1B"]:
-     print(f"Fielder was faster ({fielder_time:.2f}s vs runner {base_times['1B']:.2f}s)")
-else:
-    print(f"Runner reached base first ({base_times['1B']:.2f}s vs fielder {fielder_time:.2f}s)")
+fielder_times = {
+    base: fielder_total_time(astar_result.cost, throw_distances[base])
+    for base in BASES
+}
+
+
+for base in ["1B", "2B", "3B", "HOME"]:
+    if fielder_times[base] < base_times[base]:
+        print(f"Fielder was faster ({fielder_times[base]:.2f}s vs runner {base_times[base]:.2f}s) at {base}")
+    else:
+        print(f"Runner reached base first ({base_times[base]:.2f}s vs fielder {fielder_times[base]:.2f}s) at {base}")
 
 
 # Result
-if base_times["HOME"] < fielder_time:
-    draw_play("INSIDE THE PARK HOME RUN", path=astar_result.path)
-elif base_times["3B"] < fielder_time:
-    draw_play("TRIPLE", highlight_base="third", path=astar_result.path)
-elif base_times["2B"] < fielder_time:
-    draw_play("DOUBLE", highlight_base="second", path=astar_result.path)
-elif base_times["1B"] < fielder_time:
-    draw_play("SINGLE", highlight_base="first", path=astar_result.path)
-else:
+
+# 1B
+if base_times["1B"] >= fielder_times["1B"]:
     draw_play("OUT AT FIRST", outfielder=best_player, path=astar_result.path)
+    exit()
+
+# 2B
+if base_times["2B"] >= fielder_times["2B"]:
+    draw_play("SINGLE", highlight_base="1B", path=astar_result.path)
+    exit()
+
+# 3B
+if base_times["3B"] >= fielder_times["3B"]:
+    draw_play("DOUBLE", highlight_base="2B", path=astar_result.path)
+    exit()
+
+# HOME
+if base_times["HOME"] >= fielder_times["HOME"]:
+    draw_play("TRIPLE", highlight_base="3B", path=astar_result.path)
+    exit()
+
+
+draw_play("INSIDE THE PARK HOME RUN", path=astar_result.path)

@@ -4,16 +4,16 @@ Graph = dict[str, list[tuple[str, int]]]
 
 # Positions
 BASES = {
-    "home": (0, 0),
-    "first": (90, 0),
-    "second": (90, 90),
-    "third": (0, 90),
+    "1B": (90, 0),
+    "2B": (90, 90),
+    "3B": (0, 90),
+    "HOME": (0, 0),
 }
 
 PLAYERS = {
-    "LF": (50, 180),
-    "CF": (170, 175),
-    "RF": (180, 50),
+    "LF": (80, 280),
+    "CF": (300, 300),
+    "RF": (270, 80),
 }
 
 # Field grid
@@ -41,8 +41,8 @@ def generate_field_graph(width: int, height: int) -> Graph:
 
 def generate_hit():
     while True:
-        x = random.randint(0, 220) # noqa: S311
-        y = random.randint(0, 220) # noqa: S311
+        x = random.randint(0, 400) # noqa: S311
+        y = random.randint(0, 400) # noqa: S311
 
         if (x, y) not in BASES.values() and not (0 <= x <= 90 and 0 <= y <= 90):
             return (x, y)
