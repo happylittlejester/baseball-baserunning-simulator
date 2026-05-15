@@ -2,6 +2,7 @@ import math
 
 from drawing import draw_play
 from field import BALL, BASES, PLAYERS, ball_in_bounds, generate_field_graph, to_node
+from logic import determine_result
 from pathfinding import astar_graph, manhattan
 from physics import fielder_total_time, generate_base_times
 
@@ -74,26 +75,14 @@ for base in ["1B", "2B", "3B", "HOME"]:
 
 
 # Result
+result = determine_result(base_times, fielder_times)
 
-# 1B
-if base_times["1B"] >= fielder_times["1B"]:
-    draw_play("OUT AT FIRST", outfielder=best_player, path=astar_result.path)
-    exit()
+highlight_map = {
+    "SINGLE": "1B",
+    "DOUBLE": "2B",
+    "TRIPLE": "3B"
+}
 
-# 2B
-if base_times["2B"] >= fielder_times["2B"]:
-    draw_play("SINGLE", highlight_base="1B", path=astar_result.path)
-    exit()
+highlight = highlight_map.get(result)
 
-# 3B
-if base_times["3B"] >= fielder_times["3B"]:
-    draw_play("DOUBLE", highlight_base="2B", path=astar_result.path)
-    exit()
-
-# HOME
-if base_times["HOME"] >= fielder_times["HOME"]:
-    draw_play("TRIPLE", highlight_base="3B", path=astar_result.path)
-    exit()
-
-
-draw_play("INSIDE THE PARK HOME RUN", path=astar_result.path)
+draw_play(result, highlight_base=highlight, path=astar_result.path)

@@ -32,7 +32,7 @@ def draw_play(result_text, highlight_base=None, outfielder=None, path=None):
         ax.plot(xs, ys, color="yellow", linewidth=2)
 
     # result text
-    ax.text(200, 200, result_text, ha="center", va="center",
+    ax.text(175, 175, result_text, ha="center", va="center",
             fontsize=30, color="yellow", weight="bold")
 
     ax.set_xlim(-10, 350)
