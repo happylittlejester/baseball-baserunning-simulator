@@ -1,9 +1,11 @@
 from app.logic import determine_result
 from app.pathfinding import astar_graph
+from app.physics import fielder_total_time, generate_base_times
 
 # pathfinding.py
 
 def test_astar():
+
     # Graph 2x2
     graph = {
         "0_0": [("1_0", 1), ("0_1", 1)],
@@ -22,20 +24,22 @@ def test_astar():
     # Path found
     assert result.path
 
-    # Correct Start
+    # Path starts at the correct start node
     assert result.path[0] == "0_0"
 
-    # Correct End
+    # Path ends at the correct goal node
     assert result.path[-1] == "1_1"
 
-    # Cost > 0
+    # Path cost is positive
     assert result.cost > 0
 
-    # Path length
+    # Path contains at least two nodes
     assert len(result.path) >= 2
 
 
 # logic.py
+
+# determine_result returns the correct outcome based on which base the fielder reaches first
 
 def test_out_at_first():
     base = {"1B": 4, "2B": 8, "3B": 12, "HOME": 16}
@@ -62,3 +66,32 @@ def test_inside_the_park_home_run():
     field = {"1B": 5, "2B": 8, "3B": 11, "HOME": 20}
     assert determine_result(base, field) == "INSIDE THE PARK HOME RUN"
 
+
+# physics.py
+
+# All expected base keys are returned
+def test_generate_base_times_keys():
+    times = generate_base_times()
+    assert set(times.keys()) == {"1B", "2B", "3B", "HOME"}
+
+# All generated times are positive
+def test_generate_base_times_positive():
+    times = generate_base_times()
+    for t in times.values():
+        assert t > 0
+
+# Time increases with distance
+def test_generate_base_times_increasing():
+    times = generate_base_times()
+    assert times["1B"] < times["2B"] < times["3B"] < times["HOME"]
+
+# Total fielder time is positive
+def test_fielder_total_time_positive():
+    t = fielder_total_time(100, 200)
+    assert t > 0
+
+# Longer distance results in longer time
+def test_fielder_total_time_distance_effect():
+    t1 = fielder_total_time(50, 50)
+    t2 = fielder_total_time(100, 100)
+    assert t2 > t1
