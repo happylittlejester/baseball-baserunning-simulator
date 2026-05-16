@@ -1,5 +1,5 @@
-from app.pathfinding import astar_graph
 from app.logic import determine_result
+from app.pathfinding import astar_graph
 
 # pathfinding.py
 
@@ -33,6 +33,7 @@ def test_astar():
 
     # Path length
     assert len(result.path) >= 2
+
 
 # logic.py
 
