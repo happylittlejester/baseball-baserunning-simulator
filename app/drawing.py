@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from field import BALL, BASES, PLAYERS
 
+# Draws the baseball field and visualizes the A* path
 
 def draw_play(result_text, highlight_base=None, outfielder=None, path=None):
     fig, ax = plt.subplots(figsize=(8, 8))

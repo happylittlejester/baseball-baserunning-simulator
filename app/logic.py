@@ -1,3 +1,5 @@
+# Determines the play outcome based on runner and fielder times
+
 def determine_result(base_times, fielder_times):
     if fielder_times["1B"] < base_times["1B"]:
         return "OUT AT FIRST"

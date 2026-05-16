@@ -16,7 +16,7 @@ PLAYERS = {
     "RF": (270, 80),
 }
 
-# Field grid
+# Generates a field grid
 def generate_field_graph(width: int, height: int) -> Graph:
     graph: Graph = {}
 
@@ -39,23 +39,28 @@ def generate_field_graph(width: int, height: int) -> Graph:
     return graph
 
 
+# Generates a random ball landing position
 def generate_hit():
     while True:
         x = random.randint(0, 400) # noqa: S311
         y = random.randint(0, 400) # noqa: S311
 
+        # Accepts only positions outside the diamond
         if (x, y) not in BASES.values() and not (0 <= x <= 90 and 0 <= y <= 90):
             return (x, y)
 
 
+# Randomly generated ball position
 BALL = generate_hit()
 print("Ball landed at:", BALL)
 
 
+# Checks if the ball is inside the field boundaries
 def ball_in_bounds(ball, width, height):
     x, y = ball
     return 0 <= x < width and 0 <= y < height
 
 
+# Converts (x, y) coordinates into a graph node string "x_y"
 def to_node(x, y):
     return f"{x}_{y}"

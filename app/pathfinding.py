@@ -6,6 +6,7 @@ from typing import Callable
 
 Graph = dict[str, list[tuple[str, int]]]
 
+# Stores the result of an A* search: final path, visited nodes and total cost
 @dataclass
 class SearchResult:
     path: list
@@ -13,6 +14,7 @@ class SearchResult:
     cost: int | None = None
 
 
+# Reconstructs the final path by backtracking from the goal to the start
 def reconstruct_path(parent: dict, goal):
     path = []
     current = goal
@@ -25,12 +27,14 @@ def reconstruct_path(parent: dict, goal):
     return path
 
 
+# Manhattan heuristic (distance in vertical & horizontal steps)
 def manhattan(a: str, b: str) -> int:
     ax, ay = map(int, a.split("_"))
     bx, by = map(int, b.split("_"))
     return abs(ax - bx) + abs(ay - by)
 
 
+# A* pathfinding using Manhattan heuristic
 def astar_graph(
     graph: Graph,
     start: str,
